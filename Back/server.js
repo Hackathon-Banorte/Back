@@ -1,14 +1,16 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import cors from "cors";
-import userRoutes from "./routes/userRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import developRoutes from "./routes/developRoutes.js";
 import express from "express";
 
 const app = express();  
 
 app.use(cors());
 app.use(express.json());
-app.use("/chat/",userRoutes);
+app.use("/chat/",chatRoutes);
+app.use("/develop/", developRoutes);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
