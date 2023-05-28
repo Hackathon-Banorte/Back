@@ -21,6 +21,5 @@ export const embeddText = async (query) => {
         },
     });
     console.log("Text embedding generated");
-    console.log(response.data.data[0].embedding);
     return await response.data.data[0].embedding;
 }

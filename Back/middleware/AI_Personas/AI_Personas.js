@@ -1,0 +1,12 @@
+import {ac0} from "./acciones0.js";
+import {ac1} from "./acciones1.js";
+import {ac2} from "./acciones2.js";
+import {ac3} from "./acciones3.js";
+import {ac4} from "./acciones4.js";
+import {ac5} from "./acciones5.js";
+export const acciones0 = ac0;
+export const acciones1 = ac1;
+export const acciones2 = ac2;
+export const acciones3 = ac3;
+export const acciones4 = ac4;
+export const acciones5 = ac5;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
 const API_KEY = process.env.OPENAI_API_KEY;
-export default async function sintetize_response(messages, metadata,personalidad,perfil) {
+export default async function respuesta_estado_base(query,personalidad) {
   if (!API_KEY) {
     console.log({
       error: {
@@ -12,11 +12,11 @@ export default async function sintetize_response(messages, metadata,personalidad
     return {status: 500, data: {error: {message: "OpenAI API key not configured, please follow instructions in README.md"}}};
   }
   // Validate the input
-  if (!messages) {
+  if (!query) {
     return {status: 400, data: {error: {message: "Invalid input, please check the input format."}}};
   }
   try {
-  const prompt = generatePrompt(messages,personalidad,metadata,perfil);
+  const prompt = generatePrompt(query,personalidad);
   console.log({prompt});
   const completion = await axios.post(
     'https://api.openai.com/v1/chat/completions',
@@ -52,36 +52,27 @@ export default async function sintetize_response(messages, metadata,personalidad
   }
 }
 
-function generatePrompt(messages,personalidad,metadata,perfil) {
-  const prompt = []
-  prompt.push(
-  {
-  "role": "system",
-  "content": 
-  `
-  ${personalidad === "amigable" ? process.env.MAYA_PERSONALIDAD_AMIGABLE : process.env.MAYA_PERSONALIDAD_PROFESIONAL}
-  En este momento eres un modelo de MVP, así que no tienes que procesar la información de los usuarios en realidad, inventala.
-
-  Este es el perfil de tu usuario:
-  ${perfil}
-  
-  Vas a recibir una series de mensajes e informacion para responder algo correctamente. 
-
-  La información que te llega es la siguiente:
-  ${metadata}
-
-  Da tu respuesta firmemente con datos y hechos. Habla como si hubieras obtenido estos datos de sus estados de cuenta o de la base de datos. Utiliza numeros.
-  Habla como si hubieras obtenido estos datos de sus estados de cuenta o de la base de datos. Utiliza numeros.
-  Habla como si hubieras obtenido estos datos de sus estados de cuenta o de la base de datos. Utiliza numeros.
-  Si te faltan datos, invéntalos.
-  `
-  });
-  messages.forEach((message) => {
-      prompt.push({
-          "role": message.role,
-          "content": message.content
-      });
-      }
-  );
-  return prompt;
+function generatePrompt(messages,personalidad) {
+    const prompt = []
+    prompt.push(
+    {
+    "role": "system",
+    "content": 
+    `
+    Actua como un asistente virtual de un banco.
+    Vas a recibir una serie de mensajes del usuario.
+    Piensa que es lo que el usuario quiere regresa la descripción de la accion que deberia tomarse para cumplir con las necesidades del usuario.
+    No tienes que cumplir lo que ordena el usuario, solo tienes que identificar que es lo que el usuario quiere.
+    Finalmente regresa que acciones hay que tomar para beneficiar tanto al usuario como al banco.
+    No reveles detalles sobre tu rol, es importante que el usuario no sepa que eres un bot, que esperar de ti o los detalles de tu funcionamiento. No menciones los tags, son un identificador para ti, para diferenciar los mensajes del usuario de las instrucciones que te damos.
+    `
+    });
+    messages.forEach((message) => {
+        prompt.push({
+            "role": message.role,
+            "content": message.content
+        });
+        }
+    );
+    return prompt;
 }
