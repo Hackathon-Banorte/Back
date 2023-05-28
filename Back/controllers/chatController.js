@@ -131,7 +131,7 @@ export async function estado_base(req, res){
             if (actionsToTake[0].id == "acciones-6"){
                 toReturn = await consultar_informacion(messages, response, "banorte-productos", r.personalidad, r.initial_state);
             }
-            if(actionsToTake[0].id == "acciones-7"){
+            else if(actionsToTake[0].id == "acciones-7"){
                 // Transfer to account, use regex to find the amount
                 const amount = messages[messages.length - 1].content.match(/(\d+)/)[0];
 
